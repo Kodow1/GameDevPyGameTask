@@ -3,7 +3,7 @@ import pygame
 pygame.init()
 pygame.display.set_caption("BOB the Blob")
 
-WIDTH,HEIGHT = 1100,800
+WIDTH,HEIGHT = 1100,650
 BORDER_WIDTH,BORDER_HIGHT = WIDTH-10,HEIGHT-10
 
 bg1 = pygame.image.load("backgrounds/BG-1.png")
@@ -44,7 +44,7 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.x = x
         self.y = y
-        self.velocity = 5
+        self.velocity = 7
         
     def move(self,keys_pressed,room):
         if keys_pressed[pygame.K_a] and self.x - self.velocity > room.left or keys_pressed[pygame.K_LEFT] and self.x - self.velocity > room.left:  # LEFT
@@ -59,7 +59,7 @@ class Player(pygame.sprite.Sprite):
 def room_change(player,room):
     """if player is colliding with door, move to the next room based on the .name of the door."""
     for door in room.door_list:
-        if pygame.sprite.collide_rect():
+        if door.rect.colliderect(player.rect):
             print (door.name)
     
 
@@ -114,16 +114,16 @@ class Room1():
 
 
         
-def draw_window(player, room):
-    SCREEN.blit(room.bg_image, (0,0))
-    SCREEN.blit(player.image, (player.x, player.y))
+def draw_window(player, room,scale):
+    SCREEN.blit(room.bg_image, (0,-scale))
+    SCREEN.blit(player.image, (player.x, player.y-scale))
     for door in room.door_list:
-        SCREEN.blit(door.surface, (door.x, door.y))
+        SCREEN.blit(door.surface, (door.x, door.y-scale))
     pygame.display.update()
 
 def main():
     
-    
+    scale = 150
     player = Player(200,550)
     clock = pygame.time.Clock()
     room1 = Room1()
@@ -142,7 +142,7 @@ def main():
         #door_hit_list = pygame.sprite.spritecollide(player,room.door_list, False)
     
         room_change(player, room)
-        draw_window(player,room)   
+        draw_window(player,room,scale)
     
 if __name__ == "__main__":
     main()
