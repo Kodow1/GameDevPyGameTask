@@ -2,29 +2,21 @@ import pygame
 
 pygame.init()
 pygame.display.set_caption("BOB the Blob")
-scale = 0
-WIDTH,HEIGHT = 1100,800-scale
-BORDER_WIDTH,BORDER_HIGHT = WIDTH-10,HEIGHT-10
 
-bg1 = pygame.image.load("backgrounds/BG-1.png")
-bg1a = pygame.image.load("backgrounds/BG-1-A.png")
-bg2 = pygame.image.load("backgrounds/BG-2-A.png")
-bg3 = pygame.image.load("backgrounds/BG-3.png")
-
-
+scale = -150
+WIDTH,HEIGHT = 1100,650
 SCREEN = pygame.display.set_mode((WIDTH,HEIGHT))
-
-BLACK = (0,0,0)
-WHITE = (255,255,255)
-BLUE = (140,140,200)
-
 FPS = 60
-VEL = 10
 
-
-image = pygame.image.load("ASSESTS/square-48.png")
-
-
+#Colours
+TRUNK = (231,185,133)
+LEAVES = (140,197,128)
+SKY = (180,219,248)
+GRASS = (160,217,148)
+WATER = (186,206,243)
+WHITE = (255,255,255)
+D_GREY = (100,100,100)
+BLACK = (0,0,0)
 
 class Doors(pygame.sprite.Sprite):
     def __init__(self,x,y,width,height,name):
@@ -35,8 +27,16 @@ class Doors(pygame.sprite.Sprite):
         self.height = height
         self.name = name
         self.rect = pygame.Rect(x,y,self.width,self.height)
-        
-        
+
+class Wall(pygame.sprite.Sprite):
+    def __init__(self,x,y,width,height,colour):
+        super().__init__()
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+        self.colour = colour
+        self.rect = pygame.Rect(x,y,self.width,self.height)  
 
 class Player(pygame.sprite.Sprite):
     def __init__(self,x,y):
@@ -44,200 +44,108 @@ class Player(pygame.sprite.Sprite):
         self.width,self.height = self.image.get_rect().size
         self.rect = pygame.Rect(x,y,self.width,self.height)
         self.velocity = 7
-        self.house_spawn = (460,740)
         
     def move(self,keys_pressed,room):
         if keys_pressed[pygame.K_a] and self.rect.x - self.velocity > room.left or keys_pressed[pygame.K_LEFT] and self.rect.x - self.velocity > room.left:  # LEFT
             self.rect.x -= self.velocity
         if keys_pressed[pygame.K_d] and self.rect.x + self.velocity + self.width < room.right or keys_pressed[pygame.K_RIGHT] and self.rect.x + self.velocity + self.width < room.right:  # RIGHT
             self.rect.x += self.velocity
-        if keys_pressed[pygame.K_w] and self.rect.y - self.velocity > room.top or keys_pressed[pygame.K_UP] and self.rect.y - VEL > room.top:  # UP
+        if keys_pressed[pygame.K_w] and self.rect.y - self.velocity > room.top or keys_pressed[pygame.K_UP] and self.rect.y - self.velocity > room.top:  # UP
             self.rect.y -= self.velocity
         if keys_pressed[pygame.K_s] and self.rect.y + self.velocity + self.height < room.bottom or  keys_pressed[pygame.K_DOWN] and self.rect.y + self.velocity + self.height < room.bottom:  # DOWN
             self.rect.y += self.velocity  
- 
-
-    
-
-# class Room():
-#     def __init__(self,image,top,bottom,left,right):
-#         super().__init__()
-#         self.image = image
-#         self.top = top + 10
-#         self.bottom = bottom - 10
-#         self.left = left + 10
-#         self.right = right - 10
-        
-class Room1():
-    def __init__(self):
+   
+class Room():
+    def __init__(self,name,image,doors,walls):
+        super().__init__()
+        self.name = name
+        self.image = pygame.image.load(image)
+        self.top = 200
+        self.bottom = HEIGHT-10
+        self.left = 13
+        self.right = WIDTH - 13
         self.door_list = pygame.sprite.Group()
-        self.bg_image = pygame.image.load("backgrounds/BG-1.png")
-        self.top = 425
-        self.bottom = HEIGHT -5
-        self.left = 10
-        self.right = WIDTH - 10
-        
-        doors = [[59,360,94,110,"1a"],
-                 [248,360,94,110,"1b"],
-                 [445,360,94,110,"1c"],
-                 [1060,426,40,370,"2"]
-                 ]
-        
-        # self.door1a = Doors(59,360,94,110,"door1a")
-        # self.door1b = Doors(248,360,94,110,"door1b")
-        # self.door1c = Doors(445,360,94,110,"door1c")
-        # self.door2 = Doors(1060,426,40,370,"door2")
         
         for item in doors:
             door = Doors(item[0], item[1], item[2], item[3], item[4])
             self.door_list.add(door)
-
-class Room1A():
-    def __init__(self):
-        self.door_list = pygame.sprite.Group()
-        self.bg_image = pygame.image.load("backgrounds/BG-1-A.png")
-        self.top = 40
-        self.bottom = HEIGHT - 40
-        self.left = 40
-        self.right = WIDTH - 40
-        
-        doors = [[441,757,218,40,"1"]]
-        for item in doors:
-            door = Doors(item[0], item[1], item[2], item[3], item[4])
-            self.door_list.add(door)
-
-class Room1B():
-    def __init__(self):
-            self.door_list = pygame.sprite.Group()
-            self.bg_image = pygame.image.load("backgrounds/BG-1-B.png")
-            self.top = 40
-            self.bottom = HEIGHT - 40
-            self.left = 40
-            self.right = WIDTH - 40
-            
-            doors = [[441,757,218,40,"1"]]
-            for item in doors:
-                door = Doors(item[0], item[1], item[2], item[3], item[4])
-                self.door_list.add(door)
-
-class Room1C():
-    def __init__(self):
-            self.door_list = pygame.sprite.Group()
-            self.bg_image = pygame.image.load("backgrounds/BG-1-C.png")
-            self.top = 40
-            self.bottom = HEIGHT - 40
-            self.left = 40
-            self.right = WIDTH - 40
-            
-            doors = [[441,757,218,40,"1"]]
-            for item in doors:
-                door = Doors(item[0], item[1], item[2], item[3], item[4])
-                self.door_list.add(door)
-                
-class Room2():
-    def __init__(self):
-        self.door_list = pygame.sprite.Group()
-        self.bg_image = pygame.image.load("backgrounds/BG-2-A.png")
-        self.top = 425
-        self.bottom = HEIGHT -5
-        self.left = 10
-        self.right = WIDTH - 10
-        
-        doors = [[0,426,40,370,"1"],
-                 [1060,426,40,370,"3"]
-                 ]
-        
-        # self.door1a = Doors(59,360,94,110,"door1a")
-        # self.door1b = Doors(248,360,94,110,"door1b")
-        # self.door1c = Doors(445,360,94,110,"door1c")
-        # self.door2 = Doors(1060,426,40,370,"door2")
-        
-        for item in doors:
-            door = Doors(item[0], item[1], item[2], item[3], item[4])
-            self.door_list.add(door)
-            
-class Room3():
-    def __init__(self):
-        self.door_list = pygame.sprite.Group()
-        self.bg_image = pygame.image.load("backgrounds/BG-3.png")
-        self.top = 425
-        self.bottom = HEIGHT -5
-        self.left = 10
-        self.right = WIDTH - 10
-        
-        doors = [[0,426,40,370,"2"],
-                 [1060,426,40,370,"4"]
-                 ]
-        
-        # self.door1a = Doors(59,360,94,110,"door1a")
-        # self.door1b = Doors(248,360,94,110,"door1b")
-        # self.door1c = Doors(445,360,94,110,"door1c")
-        # self.door2 = Doors(1060,426,40,370,"door2")
-        
-        for item in doors:
-            door = Doors(item[0], item[1], item[2], item[3], item[4])
-            self.door_list.add(door)
-
 
 def room_change(player,room):
     """if player is colliding with door, move to the next room based on the .name of the door."""
     for door in room.door_list:
         if door.rect.colliderect(player.rect):
             if door.name == "1":
-                new_room = Room1()
+                new_room = room1
+                if room == room2a: 
+                    player.rect.x = spawn_x_right
+                else:
+                    player.rect.x,player.rect.y = spawn_x_center,spawn_y_center
             elif door.name == "1a":
-                new_room = Room1A()
-                if room == Room1(): #moving from 
-                    player.rect.x,player.rect.y = player.house_spawn # moving player to spawn location of door in room
+                new_room = room1a
+                if room == room1: 
+                    player.rect.x,player.rect.y = spawn_x_center,spawn_y_bottom # moving player to spawn location of door in room
             elif door.name == "1b":
-                new_room = Room1B()
+                new_room = room1b
+                if room == room1: 
+                    player.rect.x,player.rect.y = spawn_x_center,spawn_y_bottom
             elif door.name == "1c":
-                new_room = Room1C()
-            elif door.name == "2":
-                new_room = Room2()
-                if room == Room1(): # moving from left to right
-                    player.rect.x = 50 # moving player to the left of screen without effecting the y
+                new_room = room1c
+                if room == room1: 
+                    player.rect.x,player.rect.y = spawn_x_center,spawn_y_bottom
+            elif door.name == "2a":
+                new_room = room2a
+                if room == room1: 
+                    player.rect.x = spawn_x_left 
+                elif room == room2b:
+                    player.rect.x = spawn_x_right 
+            elif door.name == "2b":
+                new_room = room2b
+                if room == room2a: 
+                    player.rect.x = spawn_x_left 
+                elif room == room3:
+                    player.rect.x = spawn_x_right 
             elif door.name == "3":
-                new_room == Room3()
-            
-        else:
-            new_room = room
-                
-            
-               
+                new_room = room3
+                if room == room2b: 
+                    player.rect.x = spawn_x_left 
     return new_room
     
-def draw_window(player, room,scale):
-    
-    SCREEN.blit(room.bg_image, (0,-scale))
-    SCREEN.blit(player.image, (player.rect.x, player.rect.y-scale))
-    for door in room.door_list:
-        pygame.draw.rect(SCREEN,(255,255,255),door.rect)
-        #SCREEN.blit(door.rect, (door.rect.x, door.rect.y-scale))
+def draw_window(player,room):
+    SCREEN.blit(room.image, (0,0))
+    SCREEN.blit(player.image, (player.rect.x, player.rect.y))
+    # for door in room.door_list: # un-code-comment to show doors
+    #     pygame.draw.rect(SCREEN,(255,255,255),door.rect)
     pygame.display.update()
 
-def main():
+#rooms
+room1 = Room("room1","backgrounds/BG-1.png",[[59,210,94,67,"1a"],[248,210,94,67,"1b"],[445,210,94,67,"1c"],[1060,0,40,650,"2a"]],[])
+room1a = Room("room1a","backgrounds/BG-1-A.png",[[500,635,100,40,"1"]],[])        
+room1b = Room("room1b","backgrounds/BG-1-B.png",[[500,635,100,40,"1"]],[])
+room1c = Room("room1c","backgrounds/BG-1-C.png",[[500,635,100,40,"1"]],[])
+room2a = Room("room2a","backgrounds/BG-2-A.png",[[0,0,40,650,"1"],[1060,0,40,650,"2b"]],[])
+room2b = Room("room2b","backgrounds/BG-2-B.png",[[0,0,40,650,"2a"],[1060,0,40,650,"3"]],[])
+room3  = Room("room3","backgrounds/BG-3.png",[[0,0,40,650,"2b"]],[])
+
+spawn_x_left = 50
+spawn_x_right = WIDTH - (100)
+spawn_x_center = WIDTH/2
+spawn_y_center = HEIGHT/2
+spawn_y_bottom = HEIGHT - 120
     
-    player = Player(200,550)
-    clock = pygame.time.Clock()
-    room1 = Room1()
-    room = room1
-    #room1a = Room1A()
-    room
-    run = True
-    while run:
-        clock.tick(FPS)
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                run = False
-                
-        keys_pressed = pygame.key.get_pressed()
-        player.move(keys_pressed,room)
-        #door_hit_list = pygame.sprite.spritecollide(player,room.door_list, False)
-    
-        room = room_change(player, room)
-        draw_window(player,room,scale)
+player = Player(spawn_x_center,spawn_y_center)
+clock = pygame.time.Clock()
+room = room1
+run = True
+while run:
+    clock.tick(FPS)
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            run = False
         
-    
-if __name__ == "__main__":
-    main()
+    keys_pressed = pygame.key.get_pressed()
+    player.move(keys_pressed,room)
+    #door_hit_list = pygame.sprite.spritecollide(player,room.door_list, False)
+    for door in room.door_list:
+        if door.rect.colliderect(player.rect):
+            room = room_change(player, room)
+    draw_window(player,room)
