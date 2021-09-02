@@ -91,6 +91,7 @@ class Player(pygame.sprite.Sprite):
         self.change_y = 0
 
 class Room():
+    '''Creates a room, stores doors and walls'''
     def __init__(self,name,image,doors,walls):
         super().__init__()
         self.name = name
