@@ -111,6 +111,38 @@ class Room():
                 wall = Walls(item[0], item[1], item[2], item[3], item[4])
                 self.wall_list.add(wall)
 
+def create_maze():
+    maze_grid = [
+        [".",".",".",".",".",".",".",".",".",".",".",".",".","."],
+        [".",".",".",".",".",".",".",".",".",".",".",".",".","."],
+        [".",".",".",".",".",".",".",".",".",".",".",".",".","."],
+        [".",".",".",".",".",".",".",".",".",".",".",".",".","."],
+        [".",".",".",".",".",".",".",".",".",".",".",".",".","."],
+        [".",".",".",".",".",".",".",".",".",".",".",".",".","."],
+        [".",".",".",".",".",".",".",".",".",".",".",".",".","."],
+        [".",".",".",".",".",".",".",".",".",".",".",".",".","."],
+        [".",".",".",".",".",".",".",".",".",".",".",".",".","."],
+        [".",".",".",".",".",".",".",".",".",".",".",".",".","."]
+    ]
+    x_screen = 84
+    y_screen = 71
+    width = 14 
+    height = 10
+    for x in width:
+        for y in height:
+            if maze_grid[x,y] == ".":
+                
+            elif maze_grid[x,y] == "-":
+                
+            elif maze_grid[x,y] == "+":
+                
+            elif maze_grid[x,y] == "l":
+                
+            
+                
+            
+        
+
 def room_change(player,room):
     """If player is colliding with door, move to the next room based on the .name of the door."""
     for door in room.door_list:
@@ -154,6 +186,8 @@ def room_change(player,room):
                 if room == room2b: 
                     player.rect.x = spawn_x_left 
     return new_room
+
+
 
 def draw_window(player,room):
     '''Draws display on screen'''
