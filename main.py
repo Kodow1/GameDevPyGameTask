@@ -92,14 +92,14 @@ class Player(pygame.sprite.Sprite):
 
 class Room():
     '''Creates a room, stores doors and walls'''
-    def __init__(self,name,image,doors,walls):
+    def __init__(self,name,image,doors,border,walls):
         super().__init__()
         self.name = name
         self.image = pygame.image.load(image)
-        self.top = 200
-        self.bottom = HEIGHT-10
-        self.left = 5
-        self.right = WIDTH - 5
+        self.top = border[0]
+        self.bottom = border[1]
+        self.left = border[2]
+        self.right = border[3]
         self.door_list = pygame.sprite.Group()
         self.wall_list = pygame.sprite.Group()
         self.walls = walls
@@ -111,37 +111,45 @@ class Room():
                 wall = Walls(item[0], item[1], item[2], item[3], item[4])
                 self.wall_list.add(wall)
 
+def generate_maze():
+    maze = [
+        ["T","-","-","-","-","-","-","-","-","-","-","-","-","l"],
+        ["l",".",".",".",".",".",".",".",".",".",".",".",".","l"],
+        ["l",".",".",".",".",".",".",".",".",".",".",".",".","l"],
+        ["l",".",".",".",".",".",".",".",".",".",".",".",".","l"],
+        ["l",".",".",".",".",".",".",".",".",".",".",".",".","l"],
+        ["l",".",".",".",".",".",".",".",".",".",".",".",".","l"],
+        ["l",".",".",".",".",".",".",".",".",".",".",".",".","l"],
+        ["l",".",".",".",".",".",".",".",".",".",".",".",".","l"],
+        ["l",".",".",".",".",".",".",".",".",".",".",".",".","l"],
+        ["-","-","-","-","-","-","-","-","-","-","-","-","-","-"]]
+    return maze
+
+
 def create_maze():
-    maze_grid = [
-        [".",".",".",".",".",".",".",".",".",".",".",".",".","."],
-        [".",".",".",".",".",".",".",".",".",".",".",".",".","."],
-        [".",".",".",".",".",".",".",".",".",".",".",".",".","."],
-        [".",".",".",".",".",".",".",".",".",".",".",".",".","."],
-        [".",".",".",".",".",".",".",".",".",".",".",".",".","."],
-        [".",".",".",".",".",".",".",".",".",".",".",".",".","."],
-        [".",".",".",".",".",".",".",".",".",".",".",".",".","."],
-        [".",".",".",".",".",".",".",".",".",".",".",".",".","."],
-        [".",".",".",".",".",".",".",".",".",".",".",".",".","."],
-        [".",".",".",".",".",".",".",".",".",".",".",".",".","."]
-    ]
-    x_screen = 84
-    y_screen = 71
+    maze_grid = generate_maze()
+    x_c = 84
+    y_c = 71
+    vertical = (10,71)
+    horizontal = (84,10)
+    dot = 10,10
     width = 14 
     height = 10
-    for x in width:
-        for y in height:
-            if maze_grid[x,y] == ".":
-                
-            elif maze_grid[x,y] == "-":
-                
-            elif maze_grid[x,y] == "+":
-                
-            elif maze_grid[x,y] == "l":
-                
-            
-                
-            
-        
+    walls = []
+    for x in range(0,width):
+        for y in range(0,height):
+            if maze_grid[y][x] == ".":
+                walls.append([x*x_c,y*y_c,dot[0],dot[1],BLACK])
+            elif maze_grid[y][x] == "-":
+                walls.append([x*x_c,y*y_c,horizontal[0],horizontal[1],BLACK])
+            elif maze_grid[y][x] == "l":
+                walls.append([x*x_c,y*y_c,vertical[0],vertical[1],BLACK])
+            elif maze_grid[y][x] == "T":
+                walls.append([x*x_c,y*y_c,horizontal[0],horizontal[1],BLACK])
+                walls.append([x*x_c,y*y_c,vertical[0],vertical[1],BLACK])
+    print(walls)
+    return walls
+
 
 def room_change(player,room):
     """If player is colliding with door, move to the next room based on the .name of the door."""
@@ -185,6 +193,10 @@ def room_change(player,room):
                 new_room = room3
                 if room == room2b: 
                     player.rect.x = spawn_x_left 
+            elif door.name == "4":
+                new_room = room4
+                if room == room3:
+                    player.rect.x,player.rect.y = spawn_x_right,spawn_y_center
     return new_room
 
 
@@ -199,24 +211,29 @@ def draw_window(player,room):
         for wall in room.wall_list:
             pygame.draw.rect(SCREEN,wall.colour,wall.rect)
     pygame.display.update()
+
+s_border = (200,HEIGHT-5,5,WIDTH - 5)
+f_border = (5,HEIGHT-5,5,WIDTH - 5)
+
 #walls (roomname_ws) ws = walls
 
 if random.randint(1,2) == 1:
     stopper_wall = [248,435,22,127,LEAVES]
 else:
     stopper_wall = [248,540,22,127,LEAVES]
-
+    
 room2a_ws = [[450,294,650,22,LEAVES],[590,294,22,110,LEAVES],[1078,294,22,178,LEAVES],[681,382,336,22,LEAVES],[681,382,22,126,LEAVES],[450,487,253,22,LEAVES],[450,628,650,22,LEAVES],[750,472,22,178,LEAVES],[915,472,22,178,LEAVES],[832,382,22,180,LEAVES],[996,382,22,180,LEAVES],[996,543,104,22,LEAVES]]
 room2b_ws = [[0,294,22,180,LEAVES],[0,294,291,22,LEAVES],[0,540,112,22,LEAVES],[0,628,1100,22,LEAVES],[90,382,22,180,LEAVES],[90,382,818,22,LEAVES],[270,228,830,22,LEAVES],[270,228,22,88,LEAVES],[179,460,296,22,LEAVES],[355,323,22,81,LEAVES],[441,305,553,22,LEAVES],[541,382,22,190,LEAVES],[270,460,22,103,LEAVES],[179,540,112,22,LEAVES],[179,540,22,100,LEAVES],[366,549,22,100,LEAVES],[453,549,22,109,LEAVES],[542,382,22,190,LEAVES],[542,552,102,22,LEAVES],[636,475,103,22,LEAVES],[717,382,22,268,LEAVES],[886,382,22,92,LEAVES],[808,464,22,98,LEAVES],[808,541,292,22,LEAVES],[972,305,22,257,LEAVES],[1078,229,22,230,LEAVES]]
 room3_ws = [[0,229,22,228,LEAVES],[0,435,270,22,LEAVES],[0,540,270,22,LEAVES],[0,630,270,22,LEAVES],stopper_wall]
 #rooms
-room1 = Room("room1","backgrounds/BG-1.png",[[59,210,94,67,"1a"],[248,210,94,67,"1b"],[445,210,94,67,"1c"],[1085,0,15,650,"2a"]],[])
-room1a = Room("room1a","backgrounds/BG-1-A.png",[[500,635,100,15,"1"]],[])        
-room1b = Room("room1b","backgrounds/BG-1-B.png",[[500,635,100,15,"1"]],[])
-room1c = Room("room1c","backgrounds/BG-1-C.png",[[500,635,100,15,"1"]],[])
-room2a = Room("room2a","backgrounds/BG-2-A.png",[[0,0,15,650,"1"],[1085,0,15,650,"2b"]],room2a_ws)
-room2b = Room("room2b","backgrounds/BG-2-B.png",[[0,0,15,650,"2a"],[1085,0,15,650,"3"]],room2b_ws)
-room3  = Room("room3","backgrounds/BG-3.png",[[0,0,15,650,"2b"]],room3_ws)
+room1 = Room("room1","backgrounds/BG-1.png",[[59,210,94,67,"1a"],[248,210,94,67,"1b"],[445,210,94,67,"1c"],[1085,0,15,650,"2a"]],s_border,[])
+room1a = Room("room1a","backgrounds/BG-1-A.png",[[500,635,100,15,"1"]],s_border,[])        
+room1b = Room("room1b","backgrounds/BG-1-B.png",[[500,635,100,15,"1"]],s_border,[])
+room1c = Room("room1c","backgrounds/BG-1-C.png",[[500,635,100,15,"1"]],s_border,[])
+room2a = Room("room2a","backgrounds/BG-2-A.png",[[0,0,15,650,"1"],[1085,0,15,650,"2b"]],s_border,room2a_ws)
+room2b = Room("room2b","backgrounds/BG-2-B.png",[[0,0,15,650,"2a"],[1085,0,15,650,"3"]],s_border,room2b_ws)
+room3  = Room("room3","backgrounds/BG-3.png",[[0,0,15,650,"2b"],[738,210,28,39,"4"]],s_border,room3_ws)
+room4 = Room("room4","backgrounds/MAZE-BG.png",[[0,0,5,650,"3"]],f_border,create_maze())
 
 spawn_x_left = 50
 spawn_x_right = WIDTH - (100)
@@ -228,6 +245,7 @@ player = Player(spawn_x_center,spawn_y_center)
 clock = pygame.time.Clock()
 room = room1
 run = True
+
 while run:
     clock.tick(FPS)
     for event in pygame.event.get():
