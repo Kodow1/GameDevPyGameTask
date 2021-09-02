@@ -1,6 +1,13 @@
 import pygame
 import random
 
+'''
+This Code was made largely by myself, Oliver Waldock. In saying that 
+I did use pieces of others work. If I have used others code I have refrenced
+it with the code taken.
+'''
+
+
 pygame.init()
 pygame.display.set_caption("BOB the Blob")
 
@@ -20,6 +27,9 @@ D_GREY = (100,100,100)
 BLACK = (0,0,0)
 
 class Doors(pygame.sprite.Sprite):
+    '''Doors are created and used to move the player to adjacent rooms. 
+    Which room is defined by self.name.
+    Doors are not printed on screen'''
     def __init__(self,x,y,width,height,name):
         super().__init__()
         self.x = x
@@ -30,6 +40,7 @@ class Doors(pygame.sprite.Sprite):
         self.rect = pygame.Rect(x,y,self.width,self.height)
 
 class Walls(pygame.sprite.Sprite):
+    '''Walls are created and used to create a barrier that the player collieds with. Walls are visable.'''
     def __init__(self,x,y,width,height,colour):
         super().__init__()
         self.x = x
@@ -40,6 +51,7 @@ class Walls(pygame.sprite.Sprite):
         self.rect = pygame.Rect(x,y,self.width,self.height)  
 
 class Player(pygame.sprite.Sprite):
+    '''Creates a moveable sprite that is moved by keyboard inputs'''
     def __init__(self,x,y):
         self.image = pygame.image.load("ASSESTS/red.png")
         self.width,self.height = self.image.get_rect().size
@@ -50,6 +62,8 @@ class Player(pygame.sprite.Sprite):
         self.rect_vel = pygame.Rect(x-self.velocity,y-self.velocity,self.width+(self.velocity*2),self.height+(self.velocity*2))
         
     def move(self,keys_pressed,room):
+        '''Moves the player and check for collisions with the borders of the room and walls in the room
+        Simpson Collagem Computer Scinece - Mazerunner (some collision elements with walls)'''
         if keys_pressed[pygame.K_a] and self.rect.x - self.velocity > room.left or keys_pressed[pygame.K_LEFT] and self.rect.x - self.velocity > room.left:  # LEFT
             self.change_x = (-1*self.velocity)
         if keys_pressed[pygame.K_d] and self.rect.x + self.velocity + self.width < room.right or keys_pressed[pygame.K_RIGHT] and self.rect.x + self.velocity + self.width < room.right:  # RIGHT
@@ -97,19 +111,23 @@ class Room():
                 self.wall_list.add(wall)
 
 def room_change(player,room):
-    """if player is colliding with door, move to the next room based on the .name of the door."""
+    """If player is colliding with door, move to the next room based on the .name of the door."""
     for door in room.door_list:
         if door.rect.colliderect(player.rect):
             if door.name == "1":
                 new_room = room1
                 if room == room2a: 
                     player.rect.x = spawn_x_right
-                else:
-                    player.rect.x,player.rect.y = spawn_x_center,spawn_y_center
+                elif room == room1a:
+                    player.rect.x,player.rect.y = 84,280
+                elif room == room1b:
+                    player.rect.x,player.rect.y = 273,280
+                elif room == room1c:
+                    player.rect.x,player.rect.y = 470,280
             elif door.name == "1a":
                 new_room = room1a
                 if room == room1: 
-                    player.rect.x,player.rect.y = spawn_x_center,spawn_y_bottom # moving player to spawn location of door in room
+                    player.rect.x,player.rect.y = spawn_x_center,spawn_y_bottom
             elif door.name == "1b":
                 new_room = room1b
                 if room == room1: 
@@ -137,6 +155,7 @@ def room_change(player,room):
     return new_room
 
 def draw_window(player,room):
+    '''Draws display on screen'''
     SCREEN.blit(room.image, (0,0))
     SCREEN.blit(player.image, (player.rect.x, player.rect.y))
     # for door in room.door_list: # un-code-comment to show doors
