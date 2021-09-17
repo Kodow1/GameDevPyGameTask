@@ -1,9 +1,13 @@
 '''
-This Code was made largely by myself, Oliver Waldock. In saying that 
-I did use pieces of others work. If I have used others code I have refrenced
-it with the code taken.
+BOB THE BLOB
 
-Music copyright disclaimer:
+This Code was made largely by myself, Oliver Waldock. In saying that 
+I did use pieces of others work. There is a list below:
+
+Code copyright:
+Simpson Collagem Computer Scinece - Mazerunner ----- Some elements of Player.Move() function around collisions with walls. 
+
+Music copyright:
 In my dreams - Fato Shadow
 Paradise - Fato Shadow
 bossfight - public domain
@@ -32,6 +36,8 @@ WATER = (186,206,243)
 WHITE = (255,255,255)
 D_GREY = (100,100,100)
 BLACK = (0,0,0)
+
+##### Classes #####
 
 class Doors(pygame.sprite.Sprite):
     '''Doors are created and used to move the player to adjacent rooms. 
@@ -83,7 +89,7 @@ class Player(pygame.sprite.Sprite):
         
     def move(self,keys_pressed,room):
         '''Moves the player and check for collisions with the borders of the room and walls in the room
-        Simpson Collagem Computer Scinece - Mazerunner (some collision elements with walls)'''
+        '''
         if keys_pressed[pygame.K_a] and self.rect.x - self.velocity > room.left or keys_pressed[pygame.K_LEFT] and self.rect.x - self.velocity > room.left:  # LEFT
             self.change_x = (-1*self.velocity)
         if keys_pressed[pygame.K_d] and self.rect.x + self.velocity + self.width < room.right or keys_pressed[pygame.K_RIGHT] and self.rect.x + self.velocity + self.width < room.right:  # RIGHT
@@ -180,6 +186,8 @@ maze_liabry = {1:[
         ["-","-","-","-","-","-","-","-","-","-","-","-","-","-"]] #9
                }    
 
+##### Functions #####
+
 def create_maze(maze_num):
     """Turns mazes from maze liabry into a list of walls"""
     x_c = 84
@@ -266,10 +274,8 @@ def room_change(player,room):
 def draw_window(player,room):
     '''Draws display on screen'''
     SCREEN.blit(room.image, (0,0))
-    # if room != homescreen or room != endscreen:
-    #     SCREEN.blit(player.image, (player.rect.x, player.rect.y))
     SCREEN.blit(player.image, (player.rect.x, player.rect.y))
-    if dialog_tally > 0:
+    if dialog_tally > 0 and room != room4:
         SCREEN.blit(health_bar.images[health_bar.health], (825, 16))
     for NPC in room.inter_list:
         SCREEN.blit(NPC.image, (NPC.rect.x, NPC.rect.y))
@@ -318,19 +324,19 @@ if True: # Stores all base varibales in a collapsible state
     s_border = (200,HEIGHT-5,5,WIDTH - 5)
     f_border = (3,HEIGHT-3,3,WIDTH - 3)
 
-
-    #walls (roomname_ws) ws = walls
-
+    ##### Walls #####
+    
+    #walls for first maze (roomname_ws) ws = walls  (Second maze is made with Create_maze())
+    room2a_ws = [[590,294,510,22,LEAVES],[590,294,22,110,LEAVES],[1078,294,22,178,LEAVES],[681,382,336,22,LEAVES],[681,382,22,126,LEAVES],[450,487,253,22,LEAVES],[450,628,650,22,LEAVES],[750,472,22,178,LEAVES],[915,472,22,178,LEAVES],[832,382,22,180,LEAVES],[996,382,22,180,LEAVES],[996,543,104,22,LEAVES]]
+    room2b_ws = [[0,294,22,180,LEAVES],[0,294,291,22,LEAVES],[0,540,112,22,LEAVES],[0,628,1100,22,LEAVES],[90,382,22,180,LEAVES],[90,382,818,22,LEAVES],[270,228,830,22,LEAVES],[270,228,22,88,LEAVES],[179,460,296,22,LEAVES],[355,323,22,81,LEAVES],[441,305,553,22,LEAVES],[541,382,22,190,LEAVES],[270,460,22,103,LEAVES],[179,540,112,22,LEAVES],[179,540,22,100,LEAVES],[366,549,22,100,LEAVES],[453,549,22,109,LEAVES],[542,382,22,190,LEAVES],[542,552,102,22,LEAVES],[636,475,103,22,LEAVES],[717,382,22,268,LEAVES],[886,382,22,92,LEAVES],[808,464,22,98,LEAVES],[808,541,292,22,LEAVES],[972,305,22,257,LEAVES],[1078,229,22,230,LEAVES]]
     if random.randint(1,2) == 1:
         stopper_wall = [248,435,22,127,LEAVES]
     else:
         stopper_wall = [248,540,22,127,LEAVES]
-
-
-    room2a_ws = [[590,294,510,22,LEAVES],[590,294,22,110,LEAVES],[1078,294,22,178,LEAVES],[681,382,336,22,LEAVES],[681,382,22,126,LEAVES],[450,487,253,22,LEAVES],[450,628,650,22,LEAVES],[750,472,22,178,LEAVES],[915,472,22,178,LEAVES],[832,382,22,180,LEAVES],[996,382,22,180,LEAVES],[996,543,104,22,LEAVES]]
-    room2b_ws = [[0,294,22,180,LEAVES],[0,294,291,22,LEAVES],[0,540,112,22,LEAVES],[0,628,1100,22,LEAVES],[90,382,22,180,LEAVES],[90,382,818,22,LEAVES],[270,228,830,22,LEAVES],[270,228,22,88,LEAVES],[179,460,296,22,LEAVES],[355,323,22,81,LEAVES],[441,305,553,22,LEAVES],[541,382,22,190,LEAVES],[270,460,22,103,LEAVES],[179,540,112,22,LEAVES],[179,540,22,100,LEAVES],[366,549,22,100,LEAVES],[453,549,22,109,LEAVES],[542,382,22,190,LEAVES],[542,552,102,22,LEAVES],[636,475,103,22,LEAVES],[717,382,22,268,LEAVES],[886,382,22,92,LEAVES],[808,464,22,98,LEAVES],[808,541,292,22,LEAVES],[972,305,22,257,LEAVES],[1078,229,22,230,LEAVES]]
     room3_ws = [[0,229,22,228,LEAVES],[0,435,270,22,LEAVES],[0,540,270,22,LEAVES],[0,630,270,22,LEAVES],stopper_wall]
 
+    ##### Interactables #####
+    
     #buttons
     start_buttons = [["easy",430,215,"ASSESTS/240x70.png"],["medium",430,316,"ASSESTS/240x70.png"],["hard",430,417,"ASSESTS/240x70.png"]]
     end_buttons = [["play_again",296,458,"ASSESTS/240x70.png"],["quit",569,458,"ASSESTS/240x70.png"]]
@@ -339,11 +345,12 @@ if True: # Stores all base varibales in a collapsible state
     house1_npcs = [["Cole",230,300,"ASSESTS/yellow.png"]]
     house2_npcs = [["Folyd",300,300,"ASSESTS/pink.png"],["Mr. Blue",230,300,"ASSESTS/blue-100.png"]]
      
-    #flower
+    #flower and petal
     flower =[["flower",(WIDTH/2)-55,(HEIGHT/2)-107,"ASSESTS/Flower.png"]]
     petal =[["petal",WIDTH/2,HEIGHT/2,"ASSESTS/Petal.png"]]
     
-    #rooms
+    ##### Rooms #####
+
     homescreen = Room("homescreen","backgrounds/homescreen.png",[],f_border,[],start_buttons)
     room1 = Room("room1","backgrounds/BG-1.png",[[59,210,94,67,"1a"],[248,210,94,67,"1b"],[445,210,94,67,"1c"],[1085,0,15,650,"2a"]],s_border,[],[])
     house1 = Room("house1","backgrounds/BG-house.png",[[500,635,100,15,"1"]],s_border,[],house1_npcs)        
@@ -355,6 +362,8 @@ if True: # Stores all base varibales in a collapsible state
     # room 4 is in main loop
     room5 = Room("room5","backgrounds/Final-BG.png",[[1085,0,15,650,"endscreen"]],f_border,[],flower)
     endscreen = Room("endscreen","backgrounds/Asset 40.png",[],f_border,[],end_buttons)
+    
+    ##### Other #####
     
     #spawn numbers =
     spawn_x_left = 50
@@ -386,6 +395,8 @@ if True: # Stores all base varibales in a collapsible state
     player = Player(spawn_x_center,spawn_y_center)
     dialog_tally = 0
     in_dialog = False
+
+##### MAIN LOOP #####
 
 while run:
     clock.tick(FPS)
@@ -432,19 +443,20 @@ while run:
         pygame.display.update() 
     else:
         keys_pressed = pygame.key.get_pressed()
-        if in_dialog == False: #Check to start dialog
-            if keys_pressed[pygame.K_SPACE]==True:
+        if in_dialog == False: #Check to see if currently in dialog
+            if keys_pressed[pygame.K_SPACE]==True: # Checking to start dialog and what dialog to start.
                 for NPC in room.inter_list:
-                    if NPC.react_rect.colliderect(player.rect):
+                    if NPC.react_rect.colliderect(player.rect): #NPC.react_rect is a larger rect around the NPC like a trigger area. If player is in the trigger area it starts dialog.
                         in_dialog,list,dialog_tally = dialog(dialog_tally,NPC,room)
                         counter = -1
                         break
-            #player movement
+            ##### Player Movement #####
+            # player movement only occers if not is dialog
             player.move(keys_pressed,room)
-            for door in room.door_list:
+            for door in room.door_list: #Check collisons with doors in the room
                 if door.rect.colliderect(player.rect):
-                    room = room_change(player, room)
-            draw_window(player,room)
+                    room = room_change(player, room) #Changes room.
+            draw_window(player,room) #draws the screen.
         else: # is in dialog
             length = len(list)-1
             keys_pressed = pygame.key.get_pressed()
@@ -453,7 +465,7 @@ while run:
                     counter += 1
                     SCREEN.blit(pygame.image.load(list[counter]),(0,500))
                     pygame.display.update()
-                    time.sleep(1)
+                    time.sleep(0.5)
                 else:
                     in_dialog = False
-                    time.sleep(0.3)
+                    time.sleep(0.2)
